@@ -1,5 +1,6 @@
 from types import FunctionType
 from typing import List
+from bisect import bisect_left
 import sys
 import matplotlib.pyplot as plt
 import seaborn as sn
@@ -193,7 +194,7 @@ def prepare_data(
 def train_dclstm(
         dataframe: DataFrame,
         epochs: int,
-        overlap_step: float=0.1,
+        overlap_step: float=0.01,
         time_step_window: float=0.2,
         **kwargs) -> Sequential:
     def_args = {
