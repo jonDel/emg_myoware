@@ -162,8 +162,8 @@ def model_deepconvlstm(n_time_steps: int, n_channels: int, class_number:int, **k
     model.add(Activation("softmax"))
     # Final classification layer - per timestep
     model.add(Lambda(lambda x: x[:, -1, :], output_shape=[output_dim]))
-    optimizer = optimizers.rmsprop_v2.RMSprop(learning_rate=def_args['learn_rate'],
-                                              rho=def_args['decay_factor'])
+    optimizer = optimizers.RMSprop(learning_rate=def_args['learn_rate'],
+                                   rho=def_args['decay_factor'])
     model.compile(optimizer=optimizer, loss='categorical_crossentropy',
                   metrics=def_args['metrics'])
     return model
