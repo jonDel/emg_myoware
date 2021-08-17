@@ -13,12 +13,12 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, balanced_accuracy_score
 import plotly.express as px
 from numpy import ndarray
-from keras import optimizers
-from keras.layers import Dense, Activation, BatchNormalization, Lambda, LSTM,\
+from tensorflow.keras import optimizers
+from tensorflow.keras.layers import Dense, Activation, BatchNormalization, Lambda, LSTM,\
     Dropout, Reshape, TimeDistributed, Convolution2D
-from keras.models import Sequential
-from keras.regularizers import l2
-import keras.backend as K
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.regularizers import l2
+import tensorflow.keras.backend as K
 import tensorflow as tf
 
 
