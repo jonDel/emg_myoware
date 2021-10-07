@@ -180,7 +180,7 @@ def prepare_data(
     freq = len(dataframe)/(dataframe["time"].iloc[-1] - dataframe["time"].iloc[0])
     prep_df = preprocess(dataframe, time_step_window, overlap_step, freq)
     if backend == "sklearn":
-        X = prep_df["myoelec_lst"].apply(agg_fun)
+        X = prep_df["myoelec_lst"].apply(agg_func)
         y = prep_df["class"]
     elif backend == "keras":
         np_myo = np.array(prep_df["myoelec_lst"].to_list())
