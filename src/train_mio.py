@@ -55,7 +55,7 @@ def combine_datasets(dataframes: List[DataFrame]):
 def train(dataframe: DataFrame, clf, split_size: float=0.3,
           target_names: list = [],
           plot_confusion_matrix: bool=True) -> list:
-    X = dataframe["myoelec_lst"].to_numpy().reshape(-1, 1)
+    X = dataframe["semg"].to_numpy().reshape(-1, 1)
     y = dataframe["class"]
     # Split dataset into training set and test set
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=split_size)
@@ -74,15 +74,15 @@ def preprocess(dataframe: DataFrame, window_size: float, step_size: float, freq=
     m_myo = []
     n_total = int(len(dataframe)/n_step - int(n_window/n_step))
     for stp in range(n_total):
-        m_myo.append(dataframe["myoelec_lst"].iloc[stp*n_step:stp*n_step + n_window].to_list())
+        m_myo.append(dataframe["semg"].iloc[stp*n_step:stp*n_step + n_window].to_list())
         m_class.append(dataframe["class"].iloc[stp*n_step + n_window])
     df = pd.DataFrame(list(zip(m_myo, m_class)),
-                      columns =["myoelec_lst", "class"])
+                      columns =["semg", "class"])
     return df
 
 
 def apply_agg(dataframe: DataFrame, agg_fun: FunctionType) -> DataFrame:
-    dataframyye["myoelec_lst"] = dataframe["myoelec_lst"].apply(agg_fun)
+    dataframe["semg"] = dataframe["semg"].apply(agg_fun)
     return dataframe
 
 
@@ -175,15 +175,15 @@ def prepare_data(
         overlap_step: float=0.01,
         time_step_window: float=0.2,
         test_size: float=0.3,
-        agg_func: FunctionType=lambda x: np.sqrt(np.mean(np.square(x[0]), axis=0))[0],
+        agg_func: FunctionType=lambda x: np.sqrt(np.mean(np.square(x), axis=0)),
         n_channels: int=1) -> List[np.ndarray]:
     freq = len(dataframe)/(dataframe["time"].iloc[-1] - dataframe["time"].iloc[0])
     prep_df = preprocess(dataframe, time_step_window, overlap_step, freq)
     if backend == "sklearn":
-        X = prep_df["myoelec_lst"].apply(agg_func)
+        X = prep_df["semg"].apply(agg_func)
         y = prep_df["class"]
     elif backend == "keras":
-        np_myo = np.array(prep_df["myoelec_lst"].to_list())
+        np_myo = np.array(prep_df["semg"].to_list())
         X = np_myo.reshape(np_myo.shape[0], len(np_myo[0]), n_channels, 1)
         y = tf.keras.utils.to_categorical(prep_df["class"].to_numpy(),
                                           max(prep_df["class"] + 1))
